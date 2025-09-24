@@ -1,6 +1,11 @@
+
+# build directory
+build
+.cache
+CMakeFiles
+.vscode
 # Prerequisites
 *.d
-
 # Compiled Object files
 *.slo
 *.lo
