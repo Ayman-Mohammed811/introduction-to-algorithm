@@ -4,6 +4,7 @@ build
 .cache
 CMakeFiles
 .vscode
+main
 # Prerequisites
 *.d
 # Compiled Object files
