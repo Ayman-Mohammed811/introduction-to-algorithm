@@ -1,8 +1,9 @@
 #include <cstdio>
 
 // #include "../include/datastructure/nodes.h"
-#include "../include/datastructure/queue.h"
-
+// #include "../include/datastructure/queue.h"
+#include "../include/datastructure/stack.h"
+#include <stack>
 int main() {
     // __line_node_with_one_direction__<double> single(1);
     // __line_node_with_two_direction__<double> dble(50);
@@ -16,16 +17,19 @@ int main() {
 
     // printf(" \n \n  %d \n\n" , ( dble==dble ));
 
-    containers::queue<double> q ;
+    containers::stack<double> q ;
+    std::stack<int>x;
 
+    
     q.push(50.501);
     q.push(60.89);
     q.push(8258.2588);
     q.push(89522);
     q.emplace(100);
-    printf("q size : %llu \n q front : %f \n q back : %f \n" , q.size() , q.front() , q.back());
-    // q.pop(); q.pop(); q.pop(); q.pop();
-    printf("size : %llu" , q.size());
+    printf("q size : %llu \n q top : %f \n" , q.size() , q.top() );
+     q.pop(); q.pop(); q.pop(); q.pop(); q.pop();
+   
+     printf("size : %f" , q.top());
 
     
 

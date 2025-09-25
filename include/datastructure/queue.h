@@ -20,6 +20,7 @@ namespace containers {
                     this->__head = this->__head->ref_next();
                     delete tmp;
                 }
+                 this->_len_ = 0;
             }
             
             void push(const _Typ& val) {
@@ -37,8 +38,8 @@ namespace containers {
             void pop(){
                 if(!this->__head ){ return; } 
                 if (this->__tail == this->__head){ 
-                     this->__tail =nullptr; 
-                     this->__head =nullptr; 
+                      
+                    delete this->__head ; 
                     }
                 else{
                     auto tmp = this->__head;
