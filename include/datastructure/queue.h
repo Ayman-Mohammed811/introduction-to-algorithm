@@ -6,6 +6,9 @@
 
 namespace containers {
     template<class _Typ> class queue{
+        /*
+         classic queue wrote to learn how to use template , ptr , and learn new logic and technics 
+        */
         nodes::__line_node_with_one_direction__<_Typ>* __head ,* __tail;
         unsigned long long _len_;
         public:
@@ -69,6 +72,7 @@ namespace containers {
                 return this->__head->get_val();
             }
 
+            //this function help to build the type of queu from type's constractor 
             template<class... Args> void emplace(Args&&... vals){ this->push( _Typ(std::forward<_Typ>(vals))... ); }
             
             bool empty() { return this->__head == nullptr; }

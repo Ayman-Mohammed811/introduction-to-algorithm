@@ -3,20 +3,20 @@
 #define NODES_HPP 1
 namespace nodes{
     template<typename  _Typ > class __line_node_with_one_direction__ {
-        using node_type = __line_node_with_one_direction__<_Typ>;
+        using node_type = __line_node_with_one_direction__<_Typ>; //alias for easy writing  
 
-       node_type* __next;
-        _Typ __elem;
+       node_type* __next; // raw ptr is more fast but unsafe
+        _Typ __elem; // data container
 
         public:
         
-        explicit __line_node_with_one_direction__(const _Typ& val = _Typ()) : __elem(val) , __next(nullptr){}
+        explicit __line_node_with_one_direction__(const _Typ& val = _Typ()) : __elem(val) , __next(nullptr){} 
         
-        ~__line_node_with_one_direction__()=default;
+        ~__line_node_with_one_direction__()=default; // delete __next is not efficial when use the node 
         
-        _Typ& get_val() { return this->__elem; }
+        _Typ& get_val() { return this->__elem; } // read and write by using returning value reference
         
-        const _Typ& get_val () const { return this->__elem; }
+        const _Typ& get_val () const { return this->__elem; } // when define const node
         
         void set_val(const _Typ& value) { this->__elem = value; }
         
@@ -24,7 +24,7 @@ namespace nodes{
         
         const node_type* next () const { return this->__next; }
         
-        node_type*& ref_next () { return this->__next; }
+        node_type*& ref_next () { return this->__next; } // more efficial if need to delete object direct
 
         node_type* next () { return this->__next; }
         
