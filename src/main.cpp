@@ -36,16 +36,22 @@ int main() {
 
     // y++;
     // printf("%d" , x);
-    double arry []= { 1 , 2 , 8 , 9 , -78 , 0 ,14 , 8 , 3 , 5};
-
-    sort::insertion_sort::__sort(arry);
+    double arry1 []= { 1 , 2 , 8 , 9 , -78 , 0 ,14 , 8 , 3 , 5};
+    std::array<double , 10> arr =  { 1 , 2 , 8 , 9 , -78 , 0 ,14 , 8 , 3 , 5};
+    sort::insertion_sort::c_style_array_ref_sort(arry1);
+    sort::insertion_sort::stl_array_ref_sort<double , 10>(arr);
 
     printf("original arr = { 1 , 2 , 8 , 9 , -78 , 0 ,14 , 8 , 3 , 5} \n");
 
+    printf("ordar array1 = { ");
+    for ( unsigned long long i =0 ; i < 10 ; i++){
+        printf(" %f , " , arry1[i]);
+    }
+    printf("}  \n\n");
     printf("ordar arr = { ");
     for ( unsigned long long i =0 ; i < 10 ; i++){
-        printf(" %f , " , arry[i]);
+        printf(" %f , " , arr[i]);
     }
-    printf("}  \n");
+        printf("}  \n\n");
 
 }
