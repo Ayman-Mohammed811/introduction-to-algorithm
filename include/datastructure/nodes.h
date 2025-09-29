@@ -1,89 +1,226 @@
   
 #ifndef NODES_HPP
 #define NODES_HPP 1
+
+#include <memory>
 namespace nodes{
-    template<typename  _Typ > class __line_node_with_one_direction__ {
-        using node_type = __line_node_with_one_direction__<_Typ>; //alias for easy writing  
+template<typename _Typ>
+class single_node {
+    using ptr = single_node<_Typ>*;  // Alias for easier usage
 
-       node_type* __next; // raw ptr is more fast but unsafe
-        _Typ __elem; // data container
+    ptr __next;     // Raw pointer to next node
+    _Typ __elem;    // Data element
 
-        public:
-        
-        explicit __line_node_with_one_direction__(const _Typ& val = _Typ()) : __elem(val) , __next(nullptr){} 
-        
-        ~__line_node_with_one_direction__()=default; // delete __next is not efficial when use the node 
-        
-        _Typ& get_val() { return this->__elem; } // read and write by using returning value reference
-        
-        const _Typ& get_val () const { return this->__elem; } // when define const node
-        
-        void set_val(const _Typ& value) { this->__elem = value; }
-        
-        void set_next( node_type* next) { this->__next = next; }
-        
-        const node_type* next () const { return this->__next; }
-        
-        node_type*& ref_next () { return this->__next; } // more efficial if need to delete object direct
+public:
+    // Constructor with default value
+    explicit single_node(const _Typ& val = _Typ()) 
+        : __elem(val), __next(nullptr) {}
 
-        node_type* next () { return this->__next; }
-        
-        bool equal_val( const node_type &other) { return this->__elem == other.get_val(); }
-        
-        bool operator==( node_type &other){
-            return this->__elem == other.get_val() &&
-                   this->__next == other.next();
-        }
-        
-        bool operator!=( node_type &other) { return !(*this == other); }
-    };
+    ~single_node() = default; // Do not delete __next to avoid recursive delete
 
-    template<typename  _Typ > class __line_node_with_two_direction__ {
+    // Accessors
 
-        using node_type = __line_node_with_two_direction__<_Typ>;
+    void set_val(const _Typ& value) { this->__elem = value; }
 
-        node_type* __next;
-        node_type* __prev;
+    void set_next(ptr next) { this->__next = next; }
+
+    _Typ& get_val() { return this->__elem; }
+    const _Typ& get_val() const { return this->__elem; }
+
+    ptr next() { return this->__next; }
+    const ptr next() const { return this->__next; }
+    ptr& ref_next() { return this->__next; }  // For direct pointer manipulation
+
+    // Comparison
+    bool equal_val(const ptr& other) const {
+        return other && ( this->__elem == other->get_val() );
+    }
+
+    bool equal_val(const single_node<_Typ>& other) const {
+        return this->__elem == other.get_val();
+    }
+
+    bool operator==(const ptr& other) const {
+        if (!other) return false;
+        return  ( __elem == other->get_val() ) &&
+                ( __next == other->next() );
+    }
+
+    bool operator==(const single_node<_Typ>& other) const {
+        return ( __elem == other.get_val() ) &&
+               ( __next == other.next() );
+    }
+
+    bool operator!=(const ptr& other) const {
+        return !(*this == other);
+    }
+
+    bool operator!=(const single_node<_Typ>& other) const {
+        return !(*this == other);
+    }
+};
+
+    template<typename  _Typ > class double_node {
+
+        using ptr = double_node<_Typ>*;
+
+        ptr __next;
+        ptr __prev;
         _Typ __elem;
 
         public:
         
-        explicit  __line_node_with_two_direction__(const _Typ& val = _Typ()) : __elem(val) , __next(nullptr) , __prev(nullptr){}
+        explicit  double_node(const _Typ& val = _Typ()) : __elem(val) , __next(nullptr) , __prev(nullptr){}
         
-        ~__line_node_with_two_direction__()= default;
-        
-        _Typ& get_val() { return this->__elem;  }
-        
-        const _Typ& get_val () const { return this->__elem; }
+        ~double_node()= default;
         
         void set_val(const _Typ& value) { this->__elem = value; }
-        
-        void set_next( node_type* next) { this->__next = next; }
-        
-        const node_type* next () const { return this->__next; }
-        
-        node_type*& ref_next () { return this->__next; }
-        
-        node_type* next () { return this->__next; }
-        
-        void set_prev(node_type* prev) { this->__prev = prev; }
 
-        const node_type* prev() const { return this->__prev; }
+        void set_next( ptr next) { this->__next = next; }
 
-        node_type*& ref_prev() { return this->__prev; }
+        void set_prev(ptr prev) { this->__prev = prev; }
 
-        node_type* prev() { return this->__prev; }
-
-        bool equal_val( const node_type &other) { return this->__elem == other.get_val(); }
+        _Typ& get_val() { return this->__elem;  }
+        const _Typ& get_val () const { return this->__elem; }
+                
+        ptr next () { return this->__next; }
+        const ptr next () const { return this->__next; }
+        ptr& ref_next () { return this->__next; }
         
-        bool operator==( node_type &other){
+        ptr prev() { return this->__prev; }
+        const ptr prev() const { return this->__prev; }
+        ptr& ref_prev() { return this->__prev; }
+
+        bool equal_val( const ptr &other) { return this->__elem == other->get_val(); }
+        bool equal_val( const double_node<_Typ> &other) { return this->__elem == other.get_val(); }
+
+        
+        bool operator==( const ptr &other){
+            return this->__elem == other->get_val() &&
+                   this->__next == other->next() &&
+                   this->__prev == other->prev();
+        }
+        bool operator==( const double_node<_Typ> &other){
             return this->__elem == other.get_val() &&
                    this->__next == other.next() &&
                    this->__prev == other.prev();
         }
        
-        bool operator!=( node_type &other) { return !(*this == other); }
+        bool operator!=( const ptr &other) { return !(*this == other); }
+        bool operator!=( const double_node<_Typ> &other) { return !(*this == other); }
     };
+
+    template<typename  _Typ > class smart_single_node: public std::enable_shared_from_this<smart_single_node<_Typ>>{
+        // in a lot of datastrucure delete pointers manually is very expensive
+        using ptr = std::shared_ptr< smart_single_node< _Typ> >;
+
+        _Typ __elem;
+        ptr next;
+
+        public: 
+
+        explicit smart_single_node(const _Typ& value = _Typ()) : __elem(value) , next(nullptr) {}
+
+        ~smart_single_node() = default; // we don't need to delete object maually
+
+        void set_val(const _Typ& value) { this->__elem = value; }
+
+        void set_next(const ptr& next) { __next = next; }
+
+        _Typ& get_val() { return this->__elem;  }
+        const _Typ& get_val () const { return this->__elem; }
+
+        ptr next() { return __next; }
+        const ptr next() const { return __next; }
+
+        // Comparison
+        bool equal_val(const ptr& other) const {
+            return other && (__elem == other->get_val());
+        }
+
+        bool equal_val(const smart_single_node<_Typ>& other) const {
+            return __elem == other.get_val();
+        }
+
+        bool operator==(const ptr& other) const {
+            if(!other) return false;
+
+            return (__elem == other->get_val()) &&
+                   (__next == other->next());
+        }
+
+        bool operator==(const smart_single_node<_Typ>& other) const {
+            return (__elem == other.get_val()) &&
+                   (__next == other.next());
+        }
+
+        bool operator!=(const ptr other) const {
+            return !(*this == other);
+        }
+
+        bool operator!=(const smart_single_node<_Typ>& other) const {
+            return !(*this == other);
+        }
+    };
+
+    template<class _Typ> class smart_double_node : public std::enable_shared_from_this<smart_double_node<_Typ>> {
+            using ptr = std::shared_ptr<smart_double_node<_Typ>>;
+            using wptr = std::weak_ptr<smart_double_node<_Typ>>;
+
+            ptr __next;
+            wptr __prev;
+            _Typ __elem;
+
+        public:
+            explicit smart_double_node(const _Typ& value = _Typ())
+            : __next(nullptr), __prev(), __elem(value) {}
+
+            ~smart_double_node() = default;
+
+            // Value Access
+            void set_val(const _Typ& value) { __elem = value; }
+            _Typ& get_val() { return __elem; }
+            const _Typ& get_val() const { return __elem; }
+
+            // Next Node Access
+            void set_next(const ptr& next) { __next = next; }
+            ptr next() { return __next; }
+            const ptr next() const { return __next; }
+
+            // Prev Node Access
+            void set_prev(const ptr& prev) { __prev = prev; }
+            ptr prev() { return __prev.lock(); }
+            const ptr prev() const { return __prev.lock(); }
+
+            // Value comparison
+            bool equal_val(const ptr& other) const {
+                return other && (__elem == other->get_val());
+            }
+
+            bool equal_val(const smart_double_node<_Typ>& other) const {
+                return __elem == other.get_val();
+            }
+
+            // Full node comparison
+            bool operator==(const ptr& other) const {
+                return other &&
+                       (__elem == other->get_val()) &&
+                       (__next == other->next()) &&
+                       (__prev.lock() == other->prev());
+            }
+
+            bool operator==(const smart_double_node<_Typ>& other) const {
+                return (__elem == other.get_val()) &&
+                       (__next == other.next()) &&
+                       (__prev.lock() == other.prev());
+            }
+
+            bool operator!=(const ptr& other) const { return !(*this == other); }
+            bool operator!=(const smart_double_node<_Typ>& other) const { return !(*this == other); }
+    
+        };
+
+
 }
 
 #endif

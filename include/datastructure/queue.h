@@ -1,16 +1,21 @@
 
 
+#ifndef QUEUE_H
+#define QUEUE_H 1
+
 #include "nodes.h"
 #include <stdexcept>
-#include <utility>
 
 namespace containers {
     template<class _Typ> class queue{
         /*
          classic queue wrote to learn how to use template , ptr , and learn new logic and technics 
         */
-        nodes::__line_node_with_one_direction__<_Typ>* __head ,* __tail;
-        unsigned long long _len_;
+       using ptr =  nodes::single_node<_Typ>*; 
+       using size = std::size_t;
+
+        ptr __head , __tail;
+        size _len_;
         public:
             queue() :  __head(nullptr) , __tail(nullptr) , _len_(0){}
             ~queue() { 
@@ -21,14 +26,15 @@ namespace containers {
                     delete tmp;
                 }
                  this->_len_ = 0;
+                  this->__tail = nullptr;
             }
             
             void push(const _Typ& val) {
+                auto *tmp =  new nodes::single_node(val);
                 if(!this->__head){
-                    this->__head = new nodes::__line_node_with_one_direction__(val);
+                    this->__head = tmp;
                     this->__tail =this->__head;
                 }else{
-                    auto *tmp =  new nodes::__line_node_with_one_direction__(val);
                     this->__tail->set_next(tmp);
                     this->__tail = this->__tail->ref_next();
                 }
@@ -40,6 +46,7 @@ namespace containers {
                 if (this->__tail == this->__head){ 
                       
                     delete this->__head ; 
+                    this->__tail = nullptr;
                     }
                 else{
                     auto tmp = this->__head;
@@ -50,35 +57,40 @@ namespace containers {
             }
 
             _Typ& front(){ 
-                if(!this->__head) throw  std::out_of_range("Envalid operation");
+                if(!this->__head) throw  std::out_of_range("Queue is empty");
                 
                 return this->__head->get_val();
             }
 
-            _Typ& back(){
-                if(!this->__tail) throw  std::out_of_range("Envalid operation");
+            _Typ& back() {
+                if(!this->__tail) throw  std::out_of_range("Queue is empty");
                  
                 return this->__tail->get_val();
             }
 
             const _Typ& back() const {
-                if(!this->__tail) throw  std::out_of_range("Envalid operation");
+                if(!this->__tail) throw  std::out_of_range("Queue is empty");
                  
                 return this->__tail->get_val();
             }
 
             const _Typ& front() const{ 
-                if(!this->__head) throw  std::out_of_range("Envalid operation");
+                if(!this->__head) throw  std::out_of_range("Queue is empty");
                 
                 return this->__head->get_val();
             }
 
             //this function help to build the type of queu from type's constractor 
-            template<class... Args> void emplace(Args&&... vals){ this->push( _Typ(std::forward<_Typ>(vals))... ); }
+            template<class... Args> void emplace(Args&&... vals){ this->push( _Typ(std::forward<Args>(vals))... ); }
             
-            bool empty() { return this->__head == nullptr; }
+            bool empty() const { return this->__head == nullptr; }
 
-            unsigned long long size() { return this->_len_;}
+            size len() const{
+            if (this->_len_ = 0) return std::string::npos;
+            return this->_len_;
+          }
     };
 
 }
+
+#endif

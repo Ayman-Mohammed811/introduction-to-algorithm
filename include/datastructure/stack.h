@@ -1,19 +1,19 @@
 
-#include <utility>
 #ifndef STACK_H
 #define STACK_H 1
 
 #include "nodes.h"
 #include <stdexcept>
 
+
 namespace containers {
     template<class _Typ> class stack {
 
-      using ptr =  nodes::__line_node_with_two_direction__<_Typ>; 
-      using llu = long long unsigned;
+      using ptr =  nodes::double_node<_Typ>*; 
+      using size = std::size_t;
 
-      ptr *__head; // stack need to make a
-      llu _len_;
+      ptr __head; // stack need to make a
+      size _len_;
 
       public:
           stack() : __head(nullptr)  , _len_(0) {}
@@ -27,7 +27,7 @@ namespace containers {
           }
 
           void push(const _Typ& val){
-            auto *tmp = new nodes::__line_node_with_two_direction__<_Typ>(val);
+            auto *tmp = new nodes::double_node<_Typ>(val);
             if (!this->__head){
                 this->__head = tmp;
             }else{
@@ -43,23 +43,22 @@ namespace containers {
                 auto tmp = this->__head;
                 this->__head  = this->__head->ref_prev();
                 delete tmp;
-            this->_len_ -=0;
+            this->_len_ -=1;
           }
 
-          template<class... Args>void emplace(Args&&... vals){
-            this->push(_Typ(std::forward<_Typ>(vals))... );
-          }
+          template<class... Args>void emplace(Args&&... vals){ this->push(_Typ(std::forward<Args>(vals))... ); }
 
           _Typ& top(){
-            if(!this->__head){ throw std::out_of_range("Envalid operation"); }
+            if(!this->__head){ throw std::out_of_range("Stack is empty"); }
             return this->__head->get_val();
           }
         
-          llu size(){
+          size len() const{
+            if (this->_len_ = 0) return std::string::npos;
             return this->_len_;
           }
 
-          llu empty(){
+          bool empty() const{
             return this->__head == nullptr;
           }
 
