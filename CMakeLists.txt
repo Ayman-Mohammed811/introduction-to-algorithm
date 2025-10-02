@@ -31,15 +31,15 @@
 # add_executable(introduction_to_algorithm ${SOURCES})
 
 
-cmake_minimum_required(VERSION 3.10)
-project(MyTest)
-
-enable_testing()
-find_package(GTest REQUIRED)
-
-add_executable(test 
-    test/test.cpp)
-target_link_libraries(test GTest::gtest_main)
-
-include(GoogleTest)
-gtest_discover_tests(test)
+#cmake_minimum_required(VERSION 3.10)
+#project(MyTest)
+#
+#enable_testing()
+#find_package(GTest REQUIRED)
+#
+#add_executable(test
+#    test/test.cpp)
+#target_link_libraries(test GTest::gtest_main)
+#
+#include(GoogleTest)
+#gtest_discover_tests(test)
